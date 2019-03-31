@@ -14,7 +14,7 @@ const store = configureStore();
 Navigation.registerComponent('rncourse.AuthScreen', () => AuthScreen, store, Provider);
 Navigation.registerComponent('rncourse.SharePlaceScreen', () => SharePlaceScreen, store, Provider);
 Navigation.registerComponent('rncourse.FindPlaceScreen', () => FindPlaceScreen, store, Provider);
-Navigation.registerComponent('rncourse.PlaceDetailScreen', () => PlaceDetailScreen);
+Navigation.registerComponent('rncourse.PlaceDetailScreen', () => PlaceDetailScreen, store, Provider);
 
 
 // starting app
