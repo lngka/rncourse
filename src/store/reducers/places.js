@@ -1,8 +1,6 @@
 import {
   ADD_PLACE,
-  DELETE_PLACE,
-  SELECT_PLACE,
-  DESELECT_PLACE
+  DELETE_PLACE
 } from "../actions/actionTypes";
 
 const initialState = {
