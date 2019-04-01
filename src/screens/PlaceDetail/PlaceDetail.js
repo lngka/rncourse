@@ -13,10 +13,15 @@ import { connect } from 'react-redux';
 import { deletePlace } from '../../store/actions/index';
 
 class PlaceDetail extends Component {
+  constructor(props) {
+    super(props);
+  }
+  
   placeDeletedHandler = () => {
     this.props.onDeletePlace(this.props.selectedPlace.key);
     this.props.navigator.pop();
   }
+
   render(){
     return (
       <View style={styles.container}>
