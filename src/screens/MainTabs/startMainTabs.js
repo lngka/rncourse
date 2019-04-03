@@ -1,18 +1,18 @@
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-function startMainTabs() {
+const startTabs = () => {
     Promise.all([
         Icon.getImageSource("md-map", 30),
         Icon.getImageSource("ios-share-alt", 30),
-        Icon.getImageSource("ios-menu", 30)    
-    ]).then( sources => {
+        Icon.getImageSource("ios-menu", 30)
+    ]).then(sources => {
         Navigation.startTabBasedApp({
             tabs: [
                 {
-                    title: "Find Place",
+                    screen: "awesome-places.FindPlaceScreen",
                     label: "Find Place",
-                    screen: "rncourse.FindPlaceScreen",
+                    title: "Find Place",
                     icon: sources[0],
                     navigatorButtons: {
                         leftButtons: [
@@ -25,9 +25,9 @@ function startMainTabs() {
                     }
                 },
                 {
-                    title: "Share Place",
+                    screen: "awesome-places.SharePlaceScreen",
                     label: "Share Place",
-                    screen: "rncourse.SharePlaceScreen",
+                    title: "Share Place",
                     icon: sources[1],
                     navigatorButtons: {
                         leftButtons: [
@@ -42,15 +42,11 @@ function startMainTabs() {
             ],
             drawer: {
                 left: {
-                    screen: "rncourse.SideDrawer"
+                    screen: "awesome-places.SideDrawer"
                 }
             }
         });
     });
-    
-    
-        
-    
-}
+};
 
-export default startMainTabs;
+export default startTabs;
