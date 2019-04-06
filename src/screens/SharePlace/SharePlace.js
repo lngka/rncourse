@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Image
-} from "react-native";
+import { View, Button, StyleSheet, ScrollView } from "react-native";
 import { connect } from "react-redux";
 
 import { addPlace } from "../../store/actions/index";
@@ -18,43 +10,52 @@ import PickImage from "../../components/PickImage/PickImage";
 import PickLocation from "../../components/PickLocation/PickLocation";
 
 class SharePlaceScreen extends Component {
-
-  constructor(props) {
-    super(props);
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
-  }
-
-  onNavigatorEvent = event => {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "sideDrawerToggle") {
-        this.props.navigator.toggleDrawer({
-          side: "left"
-        });
-      }
+    state = {
+        placeName: ""
     }
-  };
 
-  placeAddedHandler = placeName => {
-    this.props.onAddPlace(placeName);
-  };
+    constructor(props) {
+        super(props);
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+    }
 
-  render() {
+    placeNameChangedHandler = val => {
+        this.setState({
+            placeName: val
+        });
+    };
+
+    onNavigatorEvent = event => {
+        if (event.type === "NavBarButtonPress") {
+            if (event.id === "sideDrawerToggle") {
+                this.props.navigator.toggleDrawer({
+                    side: "left"
+                });
+            }
+        }
+    };
+
+    placeAddedHandler = () => {
+        this.props.onAddPlace(this.state.placeName);
+    };
+
+    render() {
     return (
-      <ScrollView>
+        <ScrollView>
         <View style={styles.container}>
-          <MainText>
+            <MainText>
             <HeadingText>Share a Place with us!</HeadingText>
-          </MainText>
-          <PickImage />
-          <PickLocation />
-          <PlaceInput />
-          <View style={styles.button}>
-            <Button title="Share the Place!" />
-          </View>
+            </MainText>
+            <PickImage />
+            <PickLocation />
+            <PlaceInput placeholder="Place Name" value={this.state.placeName} onChangeText={this.placeNameChangedHandler}/>
+            <View style={styles.button}>
+            <Button title="Share the Place!" onPress={this.placeAddedHandler}/>
+            </View>
         </View>
-      </ScrollView>
+        </ScrollView>
     );
-  }
+    }
 }
 
 const styles = StyleSheet.create({
