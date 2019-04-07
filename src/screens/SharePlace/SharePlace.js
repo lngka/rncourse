@@ -10,36 +10,39 @@ import PickImage from "../../components/PickImage/PickImage";
 import PickLocation from "../../components/PickLocation/PickLocation";
 
 class SharePlaceScreen extends Component {
-    state = {
-        placeName: ""
-    }
+  static navigatorStyle = {
+    navBarButtonColor: "orange"
+  }
+  state = {
+      placeName: ""
+  }
 
-    constructor(props) {
-        super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
-    }
+  constructor(props) {
+      super(props);
+      this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+  }
 
-    placeNameChangedHandler = val => {
-        this.setState({
-            placeName: val
-        });
-    };
+  placeNameChangedHandler = val => {
+      this.setState({
+          placeName: val
+      });
+  };
 
-    onNavigatorEvent = event => {
-        if (event.type === "NavBarButtonPress") {
-            if (event.id === "sideDrawerToggle") {
-                this.props.navigator.toggleDrawer({
-                    side: "left"
-                });
-            }
-        }
-    };
+  onNavigatorEvent = event => {
+      if (event.type === "NavBarButtonPress") {
+          if (event.id === "sideDrawerToggle") {
+              this.props.navigator.toggleDrawer({
+                  side: "left"
+              });
+          }
+      }
+  };
 
-    placeAddedHandler = () => {
-        this.props.onAddPlace(this.state.placeName);
-    };
+  placeAddedHandler = () => {
+      this.props.onAddPlace(this.state.placeName);
+  };
 
-    render() {
+  render() {
     return (
         <ScrollView>
         <View style={styles.container}>
@@ -55,7 +58,7 @@ class SharePlaceScreen extends Component {
         </View>
         </ScrollView>
     );
-    }
+  }
 }
 
 const styles = StyleSheet.create({
