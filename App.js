@@ -40,7 +40,7 @@ Navigation.registerComponent(
   () => SideDrawer
 );
 
-// Start a App
+// Start an App
 Navigation.startSingleScreenApp({
   screen: {
     screen: "awesome-places.AuthScreen",
