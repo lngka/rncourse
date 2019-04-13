@@ -4290,14 +4290,19 @@ react-lifecycles-compat@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-navigation@^1.1.493:
+react-native-maps@0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.17.1.tgz#ab2236341fd984dac8864202ae55331bc262f60c"
+  integrity sha1-qyI2NB/ZhNrIhkICrlUzG8Ji9gw=
+
+react-native-navigation@^1.1.277:
   version "1.1.493"
   resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.493.tgz#01d57dd9822ac603cd04d4529abacf193bbbcdac"
   integrity sha512-CbzeU4ET+/lSMCqrgHXbetv8xhvrUJ15qFr8LkfXfmXpcaCAhOyfJlqpKmVkhHUrPwlWVXAC+ndD0miPTEKF5Q==
   dependencies:
     lodash "4.x.x"
 
-react-native-vector-icons@^4.6.0:
+react-native-vector-icons@^4.4.2:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.6.0.tgz#e4014311ffa6de397d914ffc31b7097a874cc8d5"
   integrity sha512-rpfhfPiXCK2PX1nrNhdxSMrEGB/Gw/SvKoPM0G2wAkSoqynnes19K0VYI+Up7DqR1rFIpE4hP2erpT1tNx2tfg==
