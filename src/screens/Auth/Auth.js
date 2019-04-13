@@ -53,6 +53,8 @@ class AuthScreen extends Component {
   }
 
   switchAuthModeHandler = () => {
+    startMainTabs();
+
     this.setState(prevState => {
       return {
         ...prevState,
