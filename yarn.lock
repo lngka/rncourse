@@ -4290,6 +4290,11 @@ react-lifecycles-compat@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-native-image-picker@^0.28.1:
+  version "0.28.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.1.tgz#1127460522e0c9741fc62f3d040271d298fb6a6e"
+  integrity sha512-CW2dm+cjsdW2fjBW2WD/cSufNG0x0UpljwGHrjSzyB0TckoW+tjYv44UWtckCWxr1JtCg+QrYDO/MzlRyFcjwQ==
+
 react-native-maps@0.17.1:
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.17.1.tgz#ab2236341fd984dac8864202ae55331bc262f60c"
