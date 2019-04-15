@@ -5,7 +5,8 @@ const gcconfig = {
     projectId: "rncourse-1554751468254",
     keyFileName: "rncourse-key.json"
 };
-const gcs = require("@google-cloud/storage")(gcconfig);
+const { Storage } = require("@google-cloud/storage");
+const gcs = new Storage(gcconfig);
 const UUID = require("uuid-v4");
 
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -21,9 +22,24 @@ exports.storeImage = functions.https.onRequest((request, response) => {
         bucket.upload("/tmp/uploaded-image.jpg", {
             uploadType: "media",
             destination: "/places/" + uuid + ".jpg",
-            metaData: {
-                contentType: "image/jpeg",
-                fireBaseStorageDownloadTokens: uuid
+            metadata: {
+                metadata: {
+                    contentType: "image/jpeg",
+                    fireBaseStorageDownloadTokens: uuid
+                }
+            }
+        }, (err, file) => {
+            if (!err) {
+                response.status(201).json({
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/" +
+                              bucket.name +
+                              "/o/" +
+                              encodeURIComponent(file.name) + 
+                              "?alt=media&token=" +
+                              uuid
+                });
+            } else {
+                response.status(500).json({error: err});
             }
         })
     });
