@@ -28,14 +28,14 @@ export const addPlace = (placeName, location, image) => {
                 body: JSON.stringify(placeData)
             });
         })
-        .catch(err => {
-            console.log(err);
-            alert("Something went wrong: " + err.message);
-            dispatch(uiStopLoading());
-        })
         .then(res => res.json())
         .then(parsedRes => {
             console.log(parsedRes);
+            dispatch(uiStopLoading());
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Something went wrong: " + err.message);
             dispatch(uiStopLoading());
         });
 
@@ -45,11 +45,6 @@ export const addPlace = (placeName, location, image) => {
 export const getPlaces = () => {
     return (dispatch) => {
         fetch("https://rncourse-1554751468254.firebaseio.com/places.json")
-        .then() // empty then() to catch 4xx 5xx http errors
-        .catch(err => {
-            alert("Something went wrong: " + err.message);
-            console.log(err);
-        })
         .then(res => res.json())
         .then(parsedRes => {
             const placesData = [];
@@ -65,15 +60,19 @@ export const getPlaces = () => {
             }
             dispatch(setPlaces(placesData));
         })
+        .catch(err => {
+            alert("Something went wrong with getPlaces: " + err.message);
+            console.log(err);
+        });
     }
-}
+};
 
 const setPlaces = (data) => {
     return {
         type: SET_PLACES,
         places: data
     }
-}
+};
 
 export const deletePlace = (id) => {
     return (dispatch) => {
@@ -81,14 +80,13 @@ export const deletePlace = (id) => {
         fetch("https://rncourse-1554751468254.firebaseio.com/places/" + id + ".json", {
             method: "DELETE"
         })
-        .then() // empty then() to catch 4xx 5xx http errors
-        .catch(err => {
-            alert("Something went wrong: " + err.message);
-            console.log(err);
-        })
         .then(res => res.json())
         .then(parsedRes => {
             console.log("Done: " + parsedRes);
+        })
+        .catch(err => {
+            alert("Something went wrong: " + err.message);
+            console.log(err);
         });
     }
 };
@@ -98,4 +96,4 @@ const removePlace = (placeID) => {
         type: REMOVE_PLACE,
         id: placeID
     };
-}
+};

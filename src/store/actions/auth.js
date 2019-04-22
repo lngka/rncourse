@@ -1,4 +1,4 @@
-import { TRY_AUTH } from './actionTypes';
+import { TRY_AUTH, AUTH_SET_TOKEN } from './actionTypes';
 import { uiStartLoading, uiStopLoading } from './index';
 import startMainTabs from '../../screens/MainTabs/startMainTabs';
 
@@ -31,11 +31,19 @@ export const tryAuth = (authData, authMode) => {
         .then(res => res.json())
         .then(parsedRes => {
             dispatch(uiStopLoading());
-            if (parsedRes.error) {
+            if (!parsedRes.idToken) {
                 alert("Error authentication " + parsedRes.error);
             } else {
+                dispatch(authSetToken(parsedRes.idToken));
                 startMainTabs();
             }
         });
     };
+};
+
+const authSetToken = (token) => {
+    return {
+        type: AUTH_SET_TOKEN,
+        token: token
+    }
 };
