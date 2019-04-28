@@ -34,17 +34,20 @@ export const tryAuth = (authData, authMode) => {
             if (!parsedRes.idToken) {
                 alert("Error authentication " + parsedRes.error);
             } else {
-                dispatch(authStoreToken(parsedRes.idToken));
+                dispatch(authStoreToken(parsedRes.idToken, parsedRes.expiresIn));
                 startMainTabs();
             }
         });
     };
 };
 
-const authStoreToken = (token) => {
+const authStoreToken = (token, expiresIn) => {
     return dispatch => {
         dispatch(authSetToken(token));
+        const now = new Date();
+        const expiryDate = now.getTime() + expiresIn * 1000;
         AsyncStorage.setItem("rncourse:auth:token", token);
+        AsyncStorage.setItem("rncourse:auth:expiryDate", expiryDate.toString());
     }
 }
 
@@ -60,16 +63,28 @@ export const authGetToken = () => {
         const promise = new Promise((resolve, reject) => {
             const token = getStates().auth.token;
             if (!token) {
+                let _tokenFromStorage;
                 AsyncStorage.getItem("rncourse:auth:token")
-                .catch((err) => reject(err.message))
                 .then(tokenFromStorage => {
                     if(!tokenFromStorage) {
                         reject("Token not found!");
                         return;
                     }
-                    dispatch(authSetToken(tokenFromStorage));
-                    resolve(tokenFromStorage);
-                });
+                    _tokenFromStorage = tokenFromStorage;
+                    return AsyncStorage.getItem("rncourse:auth:expiryDate");
+                })
+                .catch((err) => reject(err.message))
+                .then(expiryDate => {
+                    const parsedDate = new Date(expiryDate);
+                    const now = new Date();
+                    if (parsedDate > now) {
+                        dispatch(authSetToken(_tokenFromStorage));
+                        resolve(_tokenFromStorage);
+                    } else {
+                        reject();
+                        return;
+                    }
+                })
             } else {
                 resolve(token);
             }
@@ -81,9 +96,9 @@ export const authGetToken = () => {
 export const authAutoSignIn = () => {
     return dispatch => {
         dispatch(authGetToken())
-        .then(token => {
+        .then(() => {
             startMainTabs();
         })
-        .catch(err => console.log("Failed to auto sign in: " + err.message));
+        .catch(() => console.log("Failed to auto sign in"));
     };
 }
