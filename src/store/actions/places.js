@@ -1,4 +1,4 @@
-import { SET_PLACES, REMOVE_PLACE } from './actionTypes';
+import { SET_PLACES, REMOVE_PLACE, PLACE_ADDED, START_ADD_PLACE } from './actionTypes';
 import { uiStartLoading, uiStopLoading, authGetToken } from './index';
 
 export const addPlace = (placeName, location, image) => {
@@ -47,6 +47,7 @@ export const addPlace = (placeName, location, image) => {
         .then(parsedRes => {
             console.log(parsedRes);
             dispatch(uiStopLoading());
+            dispatch(placeAdded());
         });
     };
 };
@@ -101,7 +102,10 @@ export const deletePlace = (id) => {
         .catch(() => {
             alert("No token found!")
         })
-        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            return res.json();
+        })
         .then(parsedRes => {
             console.log("Done: " + parsedRes);
         })
@@ -116,5 +120,17 @@ const removePlace = (placeID) => {
     return {
         type: REMOVE_PLACE,
         id: placeID
+    };
+};
+
+export const placeAdded = () => {
+    return {
+        type: PLACE_ADDED
+    };
+}
+
+export const startAddPlace = () => {
+    return {
+        type: START_ADD_PLACE
     };
 };

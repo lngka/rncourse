@@ -49,17 +49,18 @@ const authStoreToken = (token, expiresIn, refreshToken) => {
     return dispatch => {
         const now = new Date();
         const expiryDate = now.getTime() + expiresIn * 1000;
-        dispatch(authSetToken(token));
+        dispatch(authSetToken(token, expiryDate));
         AsyncStorage.setItem("rncourse:auth:token", token);
         AsyncStorage.setItem("rncourse:auth:expiryDate", expiryDate.toString());
         AsyncStorage.setItem("rncourse:auth:refreshToken", refreshToken);
     }
 }
 
-const authSetToken = (token) => {
+const authSetToken = (token, expiryDate) => {
     return {
         type: AUTH_SET_TOKEN,
-        token: token
+        token: token,
+        expiryDate: expiryDate
     }
 };
 
@@ -67,7 +68,9 @@ export const authGetToken = () => {
     return (dispatch, getStates) => {
         const promise = new Promise((resolve, reject) => {
             const token = getStates().auth.token;
-            if (!token) {
+            const expiryDate = getStates().auth.expiryDate;
+
+            if (!token || new Date(expiryDate) <= new Date()) {
                 let _tokenFromStorage;
                 AsyncStorage.getItem("rncourse:auth:token")
                 .then(tokenFromStorage => {
