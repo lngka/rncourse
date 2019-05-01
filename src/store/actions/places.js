@@ -26,7 +26,13 @@ export const addPlace = (placeName, location, image) => {
             alert("Something went wrong: " + err.message);
             dispatch(uiStopLoading());
         })
-        .then(res => res.json())
+        .then(res => { //the previous catch won't be triggered for 4xx 5xx http error
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error();
+            }
+        })
         .then(parsedRes => {
             const placeData = {
                 name: placeName,
@@ -43,7 +49,13 @@ export const addPlace = (placeName, location, image) => {
             alert("Something went wrong: " + err.message);
             dispatch(uiStopLoading());
         })
-        .then(res => res.json())
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error();
+            }
+        })
         .then(parsedRes => {
             console.log(parsedRes);
             dispatch(uiStopLoading());
@@ -103,8 +115,11 @@ export const deletePlace = (id) => {
             alert("No token found!")
         })
         .then(res => {
-            console.log(res);
-            return res.json();
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error();
+            }
         })
         .then(parsedRes => {
             console.log("Done: " + parsedRes);
