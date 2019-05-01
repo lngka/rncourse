@@ -4,12 +4,14 @@ import { AUTH_SET_TOKEN } from './actionTypes';
 import { uiStartLoading, uiStopLoading } from './index';
 import startMainTabs from '../../screens/MainTabs/startMainTabs';
 
+const API_KEY = "AIzaSyCy5WOpqrgOHRvX2GnTKuptX45RxOmuaRM";
+
+
 export const tryAuth = (authData, authMode) => {
     return dispatch => {
-        let apiKey = "AIzaSyCy5WOpqrgOHRvX2GnTKuptX45RxOmuaRM";
-        let url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + apiKey;
+        let url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + API_KEY;
         if (authMode == "login") {
-            url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + apiKey;
+            url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + API_KEY;
         }
         dispatch(uiStartLoading());
         fetch(url, {
@@ -30,24 +32,26 @@ export const tryAuth = (authData, authMode) => {
         })
         .then(res => res.json())
         .then(parsedRes => {
+            console.log(parsedRes);
             dispatch(uiStopLoading());
             if (!parsedRes.idToken) {
                 alert("Error authentication " + parsedRes.error);
             } else {
-                dispatch(authStoreToken(parsedRes.idToken, parsedRes.expiresIn));
+                dispatch(authStoreToken(parsedRes.idToken, parsedRes.expiresIn, parsedRes.refreshToken));
                 startMainTabs();
             }
         });
     };
 };
 
-const authStoreToken = (token, expiresIn) => {
+const authStoreToken = (token, expiresIn, refreshToken) => {
     return dispatch => {
         dispatch(authSetToken(token));
         const now = new Date();
         const expiryDate = now.getTime() + expiresIn * 1000;
         AsyncStorage.setItem("rncourse:auth:token", token);
         AsyncStorage.setItem("rncourse:auth:expiryDate", expiryDate.toString());
+        AsyncStorage.setItem("rncourse:auth:refreshToken", refreshToken);
     }
 }
 
@@ -89,9 +93,37 @@ export const authGetToken = () => {
                 resolve(token);
             }
         });
-        return promise; 
-    }
-}
+        return promise.catch(() => {
+            return AsyncStorage.getItem("rncourse:auth:refreshToken")
+            .then(refreshToken => {
+                return fetch("https://securetoken.googleapis.com/v1/token?key=" + API_KEY, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "grant_type=refresh_token&refresh_token=" + refreshToken
+                })
+            })
+            .then(res => res.json())
+            .then(parsedRes => {
+                if (parsedRes.id_token) {
+                    console.log("refreshToken worked!");
+                    dispatch(authStoreToken(parsedRes.id_token, parsedRes.expires_in, parsedRes.refresh_token));
+                    return parsedRes.id_token;
+                } else {
+                    dispatch(authClearStorage());
+                }
+            });
+        })
+        .then(token => {
+            if (!token) {
+                throw new Error("Could not get token with refresh token");
+            } else {
+                return token;
+            }
+        });
+    };
+};
 
 export const authAutoSignIn = () => {
     return dispatch => {
@@ -101,4 +133,11 @@ export const authAutoSignIn = () => {
         })
         .catch(() => console.log("Failed to auto sign in"));
     };
-}
+};
+
+const authClearStorage = () => {
+    return dispatch => {
+        AsyncStorage.removeItem("rncourse:auth:token");
+        AsyncStorage.removeItem("rncourse:auth:expiryDate");
+    };
+};

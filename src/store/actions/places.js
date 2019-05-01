@@ -38,17 +38,16 @@ export const addPlace = (placeName, location, image) => {
                 body: JSON.stringify(placeData)
             });
         })
-        .then(res => res.json())
-        .then(parsedRes => {
-            console.log(parsedRes);
-            dispatch(uiStopLoading());
-        })
         .catch(err => {
             console.log(err);
             alert("Something went wrong: " + err.message);
             dispatch(uiStopLoading());
+        })
+        .then(res => res.json())
+        .then(parsedRes => {
+            console.log(parsedRes);
+            dispatch(uiStopLoading());
         });
-
     };
 };
 
