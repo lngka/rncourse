@@ -37,7 +37,8 @@ export const addPlace = (placeName, location, image) => {
             const placeData = {
                 name: placeName,
                 location: location,
-                image: parsedRes.imageUrl
+                image: parsedRes.imageUrl,
+                imagePath: parsedRes.imagePath
             };
             return fetch("https://rncourse-1554751468254.firebaseio.com/places.json?auth=" + authToken, {
                 method: "POST",
@@ -104,15 +105,15 @@ const setPlaces = (data) => {
 
 export const deletePlace = (id) => {
     return (dispatch) => {
-        dispatch(removePlace(id));
         dispatch(authGetToken())
+        .catch(() => {
+            alert("No token found!");
+        })
         .then(token => {
-            return fetch("https://rncourse-1554751468254.firebaseio.com/places/" + id + ".json&auth=" + token, {
+            dispatch(removePlace(id));
+            return fetch("https://rncourse-1554751468254.firebaseio.com/places/" + id + ".json?auth=" + token, {
                 method: "DELETE"
             });
-        })
-        .catch(() => {
-            alert("No token found!")
         })
         .then(res => {
             if (res.ok) {
@@ -122,7 +123,7 @@ export const deletePlace = (id) => {
             }
         })
         .then(parsedRes => {
-            console.log("Done: " + parsedRes);
+            console.log("Done: ", parsedRes);
         })
         .catch(err => {
             alert("Something went wrong: " + err.message);

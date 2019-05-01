@@ -41,9 +41,9 @@ exports.storeImage = functions.https.onRequest((request, response) => {
                 uploadType: "media",
                 destination: "/places/" + uuid + ".jpg",
                 metadata: {
-                    contentType: "image/jpeg",
                     metadata: {
-                        fireBaseStorageDownloadTokens: uuid
+                        contentType: "image/jpeg",
+                        firebaseStorageDownloadTokens: uuid
                     }
                 }
             }, (err, file) => {
@@ -54,7 +54,8 @@ exports.storeImage = functions.https.onRequest((request, response) => {
                                 "/o/" +
                                 encodeURIComponent(file.name) + 
                                 "?alt=media&token=" +
-                                uuid
+                                uuid,
+                        imagePath: "/places/" + uuid + ".jpg"
                     });
                 } else {
                     return response.status(500).json({error: err});
@@ -70,3 +71,11 @@ exports.storeImage = functions.https.onRequest((request, response) => {
         return;
     });
 });
+
+exports.deleteImage = functions.database.ref("/places/{place_id}").onDelete((snapshot, context) => {
+    const placeData = snapshot.val();
+    const imagePath = placeData.imagePath;
+    const bucket = gcs.bucket("rncourse-1554751468254.appspot.com");
+
+    return bucket.file(imagePath).delete();
+})
