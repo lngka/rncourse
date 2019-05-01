@@ -1,8 +1,9 @@
 import { AsyncStorage } from "react-native";
 
-import { AUTH_SET_TOKEN } from './actionTypes';
+import { AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN } from './actionTypes';
 import { uiStartLoading, uiStopLoading } from './index';
 import startMainTabs from '../../screens/MainTabs/startMainTabs';
+import App from '../../../App';
 
 const API_KEY = "AIzaSyCy5WOpqrgOHRvX2GnTKuptX45RxOmuaRM";
 
@@ -46,9 +47,9 @@ export const tryAuth = (authData, authMode) => {
 
 const authStoreToken = (token, expiresIn, refreshToken) => {
     return dispatch => {
-        dispatch(authSetToken(token));
         const now = new Date();
         const expiryDate = now.getTime() + expiresIn * 1000;
+        dispatch(authSetToken(token));
         AsyncStorage.setItem("rncourse:auth:token", token);
         AsyncStorage.setItem("rncourse:auth:expiryDate", expiryDate.toString());
         AsyncStorage.setItem("rncourse:auth:refreshToken", refreshToken);
@@ -139,5 +140,20 @@ const authClearStorage = () => {
     return dispatch => {
         AsyncStorage.removeItem("rncourse:auth:token");
         AsyncStorage.removeItem("rncourse:auth:expiryDate");
+        return AsyncStorage.removeItem("rncourse:auth:refreshToken");
     };
+};
+
+export const authLogout = () => {
+    return distpatch => {
+        distpatch(authClearStorage())
+            .then(() => App());
+        distpatch(authRemoveToken());
+    };
+};
+
+const authRemoveToken = () => {
+    return {
+        type: AUTH_REMOVE_TOKEN
+    }
 };
